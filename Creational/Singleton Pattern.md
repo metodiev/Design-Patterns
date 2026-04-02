@@ -49,7 +49,7 @@ class EagerSingletonGof {
 
 ## Thread-safe Singleton Implementation 
 
-
+```java
 public class SingletonThreadSafeImplementation {
   private static final SingletonThreadSafeImplementation instance = null ;
 
@@ -64,4 +64,5 @@ public class SingletonThreadSafeImplementation {
      return instance;
   }
 
-} 
+}
+```
