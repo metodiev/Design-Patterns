@@ -55,6 +55,17 @@ The refactored AreaCalculator will look like this:
 public class AreaCalculator {
   public double calcShapeArea(Shape shape) {
   return shape.area();
-}  
+}
+
+//adn we can now extend with some another method
+//for example to calcTotalAreal
+
+public double calcTotalArea(List<Shape> shapes) {
+  double totalArea = 0;
+  for(Shape shape : shapes) {
+  totalArea += shape.area();
+  }
+  return totalArea;
+  }
 }
 
