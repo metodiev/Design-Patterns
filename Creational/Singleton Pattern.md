@@ -66,3 +66,46 @@ public class SingletonThreadSafeImplementation {
 
 }
 ```
+
+## Singleton Pattern Basic Logger implementation
+
+```java
+class BasicLogger {
+   private PrintWriter writer;
+
+   public BasicLogger(String fileName) throws IOException {
+      //Open the given file in append mode.
+      writer = new PrintWriter(new FileWriter(fileName, true));
+   
+   }
+
+   public void log(String message){
+      //Decorate and write the message
+      String decorateMessage = decorate(message);
+      writer.println(decorate(message));
+      writer.println(decorateMessage);
+      writer.flush(); //Ensure the message is written immediately
+      }
+
+      private String decorate(String message) {
+         //TODO
+   }
+}
+```
+
+let's define the decorate class first 
+
+```java
+private String decorate(String message) {
+   try{
+      //Decorate the message with the computer name. current time, and the original
+     String computerName = InetAddress.getLocalHost.getHostName();
+     LocalDateTime now = LocalDateTime.now();
+     return String.format("[%s] [%s] %s", computerName, now, message);
+      } catch (IOEception e) {
+      //Fallback if hostname can't be resolved
+      LocalDateTime now = LocalDateTime.now();
+      return String.format("[Unknown Host] [%s]", now, message);
+   }
+}
+```
