@@ -48,3 +48,106 @@ Design Considerations:
 5. Identify the state data that will need to be 'observed' and create a concrete Publisher implementation for that state. Define a way for subscribers to get that access to that state.
 6. Create a specific implementation of subscribers that you need.
 
+
+## Code
+
+Step 1: Observer Interface
+
+```java
+§public interface Observer {
+    void update(String message);
+}
+```
+
+## Step 2: Observable (Subject)
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class NewsAgency {
+
+    private List<Observer> observers = new ArrayList<>();
+    private String news;
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void setNews(String news) {
+        this.news = news;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(news);
+        }
+    }
+}
+```
+
+## Step 3: Concrete Observers
+Email Subscriber
+
+```java
+public class EmailSubscriber implements Observer {
+
+    private String email;
+
+    public EmailSubscriber(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("Email to " + email + ": " + message);
+    }
+}
+```
+
+SMS subscriber
+
+```java
+public class SmsSubscriber implements Observer {
+
+    private String phone;
+
+    public SmsSubscriber(String phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("SMS to " + phone + ": " + message);
+    }
+}
+
+```
+
+## Usage:
+
+
+```java
+public class Main {
+    public static void main(String[] args) {
+
+        NewsAgency agency = new NewsAgency();
+
+        Observer email1 = new EmailSubscriber("john@mail.com");
+        Observer sms1 = new SmsSubscriber("+359888123456");
+
+        agency.addObserver(email1);
+        agency.addObserver(sms1);
+
+        agency.setNews("Breaking News: Observer Pattern in Java!");
+        agency.setNews("Second update: Java is still powerful!");
+    }
+}
+
+```
+
