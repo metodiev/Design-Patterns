@@ -26,44 +26,72 @@ Cons:
 
 
 ## Code
+
+## Step 1 Target Interface
 ```java
-
-public class Contact {
- private String fullName;
- private String email;
- private String phoneNumber;
- private boolean friend;
-
- public Contact(String fullName, String email, String phoneNumber, boolean friend) {
- this.fullName = fullName;
- this.email = email;
- this,phoneNumber = phoneNumber;
- this.friend = friend;
-}
-
-//Getters
-public String getFullName(){
- return fullName;
- }
-
-public String getEmail(){
- return email;
-}
-
-public String getPhoneNumber() {
- return phoneNumber;
-}
-
-public boolean isFriend() {
- return friend;
-}
-
-@Override
-public String toString() {
- return "Contact" + "FUlname ......"
-}
-
-
+public interface PaymentProcessor {
+    void pay(double amount);
 }
 ```
 
+## Step 2 Legacy Class
+```java
+public class LegacyPaymentService {
+
+    public void makePayment(double value) {
+        System.out.println("Paid " + value + " using legacy system");
+    }
+}
+```
+
+
+### Step 3 Adapter
+
+```java
+public class PaymentAdapter implements PaymentProcessor {
+
+    private final LegacyPaymentService legacyService;
+
+    public PaymentAdapter(LegacyPaymentService legacyService) {
+        this.legacyService = legacyService;
+    }
+
+    @Override
+    public void pay(double amount) {
+        // adapt method call
+        legacyService.makePayment(amount);
+    }
+}
+
+```
+
+### Step 4 Usage, with Main Method:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+
+        LegacyPaymentService legacyService = new LegacyPaymentService();
+
+        PaymentProcessor processor = new PaymentAdapter(legacyService);
+
+        processor.pay(100.0);
+    }
+}
+```
+
+
+
+## Real Senior-Level Use Cases
+
+You’ll see this pattern in:
+
+1. External APIs
+  Wrapping third-party SDKs (Stripe, PayPal, etc.)
+    Keeping your domain clean
+2. Microservices Integration
+   Adapting different service contracts
+   Version migrations (v1 → v2)
+3. Data Layer
+   Adapting JDBC → your domain model
+   Or different DB drivers
