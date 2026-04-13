@@ -167,3 +167,11 @@ public class Main {
     }
 }
 ```
+
+What is doing above code:
+
+| State      | Behavior           |
+| ---------- | ------------------ |
+| Idle       | only accepts money |
+| HasMoney   | allows selection   |
+| Dispensing | only dispenses     |
