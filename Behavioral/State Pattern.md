@@ -11,4 +11,33 @@ State:
 3. Toasting
 4. Bread Ejected
 
+When to use:
+
+1. Use the State pattern when you have an object that changes its behaviour depending on its internal state, especially when the number of possible states in non-trivial.
+a. Look for many if-else statements that change behaviour of the object.
+2. Use it when you have a number of rules that act on an object based on the object;s state, especially when modeling real-world workflows.
+
+When not to use: 
+1. If the state transitions are very simple and infrequent it might not be advatageous to use the sate pattern as it would add unnecessary complexity
+
+Pros:
+1. State pattern reduces/minimizes conditional complexity by removing bulky and hard to maintain if-then-else or switch-case statement logic.
+2. You are able to introduce new states withoud changing the existing state classes or the Context. This follows the Open/Closed Principle.
+3. All the code related to a specific state is in its own separate class. This follows the Single Responsibility Principle
+
+Cons:
+1. The State pattern can require a lot of code to be written which grows in complexity as more states are modelled,
+
+
+Design Considerations:
+
+1. Look for a class or logic(if distributed across a few classes) that has some rule dependent or state-dependent code. This will be our Context
+2. Declare the State interface and design state-specific method behaviour.
+3. For each actual state, create a concrete State implementation.
+4. In the Context class, add a reference to the State interface with a public setter
+5. For each state, conditionally implement the corresponding method in the Context class.
+6. Switching the Context state will be done by setting the correct State instance.
+  a. This can be done within the Context itself, in the State instances, or by the client.
+
+
 
