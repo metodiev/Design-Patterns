@@ -40,4 +40,130 @@ Design Considerations:
   a. This can be done within the Context itself, in the State instances, or by the client.
 
 
+## Code
 
+### Step 1: State Interface
+
+```java
+public interface VendingState {
+    void insertMoney(VendingMachine machine, int amount);
+    void selectProduct(VendingMachine machine);
+    void dispense(VendingMachine machine);
+}
+```
+
+### Step 2: Context (Vending Machine)
+
+```java
+public class VendingMachine {
+
+    private VendingState state;
+
+    public VendingMachine() {
+        this.state = new IdleState(); // initial state
+    }
+
+    public void setState(VendingState state) {
+        this.state = state;
+    }
+
+    public void insertMoney(int amount) {
+        state.insertMoney(this, amount);
+    }
+
+    public void selectProduct() {
+        state.selectProduct(this);
+    }
+
+    public void dispense() {
+        state.dispense(this);
+    }
+}
+```
+
+### Step 3: Concrete States
+
+```java
+public class IdleState implements VendingState {
+
+    @Override
+    public void insertMoney(VendingMachine machine, int amount) {
+        System.out.println("Money inserted: " + amount);
+        machine.setState(new HasMoneyState());
+    }
+
+    @Override
+    public void selectProduct(VendingMachine machine) {
+        System.out.println("Insert money first!");
+    }
+
+    @Override
+    public void dispense(VendingMachine machine) {
+        System.out.println("Insert money first!");
+    }
+}
+
+```
+
+### Has Money State
+
+```java
+
+public class HasMoneyState implements VendingState {
+
+    @Override
+    public void insertMoney(VendingMachine machine, int amount) {
+        System.out.println("Already have money. Extra added: " + amount);
+    }
+
+    @Override
+    public void selectProduct(VendingMachine machine) {
+        System.out.println("Product selected.");
+        machine.setState(new DispensingState());
+    }
+
+    @Override
+    public void dispense(VendingMachine machine) {
+        System.out.println("Select product first!");
+    }
+}
+```
+
+### Dispensing State
+
+```java
+public class DispensingState implements VendingState {
+
+    @Override
+    public void insertMoney(VendingMachine machine, int amount) {
+        System.out.println("Wait, dispensing in progress!");
+    }
+
+    @Override
+    public void selectProduct(VendingMachine machine) {
+        System.out.println("Already dispensing!");
+    }
+
+    @Override
+    public void dispense(VendingMachine machine) {
+        System.out.println("Dispensing product...");
+        machine.setState(new IdleState());
+    }
+}
+```
+
+### Step 4: Usage
+
+```java
+public class Main {
+    public static void main(String[] args) {
+
+        VendingMachine machine = new VendingMachine();
+
+        machine.selectProduct();   //  invalid
+        machine.insertMoney(100);  // → Idle → HasMoney
+        machine.selectProduct();   // → HasMoney → Dispensing
+        machine.dispense();        // → back to Idle
+    }
+}
+```
